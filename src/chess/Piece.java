@@ -31,6 +31,13 @@ public abstract class Piece {
     }
 
     /**
+     * Sets the hasMoved field to true, indicating that the piece has moved at least once.
+     */
+    public void setMoved() {
+        hasMoved = true;
+    }
+
+    /**
      * Returns whether the piece has moved yet or not.
      *
      * @return true if the piece has moved, false otherwise

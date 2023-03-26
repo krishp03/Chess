@@ -13,7 +13,7 @@ public class Pawn extends Piece{
     }
 
     public String toString(){
-        return (white) ? "wp":"bp";
+        return (isWhite()) ? "wp":"bp";
     }
 
 }

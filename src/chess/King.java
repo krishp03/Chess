@@ -13,7 +13,7 @@ public class King extends Piece{
     }
 
     public String toString(){
-        return (white) ? "wK":"bK";
+        return (isWhite()) ? "wK":"bK";
     }
 
 }

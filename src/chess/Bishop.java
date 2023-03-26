@@ -65,14 +65,14 @@ public class Bishop extends Piece{
         }
         if (valid){
             if (Chess.board[x1][y1]!=null){
-                if (this.white==Chess.board[x1][y1].white) valid=false;
+                if (isWhite()==Chess.board[x1][y1].isWhite()) valid=false;
             }
         }
         return valid;
     }
 
     public String toString(){
-        return (white) ? "wB":"bB";
+        return (isWhite()) ? "wB":"bB";
     }
 
 }
