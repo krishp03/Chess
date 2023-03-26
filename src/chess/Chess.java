@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class Chess {
 
-    private static Piece[][] board;
+    static Piece[][] board;
     private static boolean whiteTurn;
     private static String end;
     private static Scanner in;
@@ -54,10 +54,6 @@ public class Chess {
 
     }
 
-    public void promote(){
-
-    }
-
     public static void printGame(){
 
         for(int i = 0; i < 8; i++) {
@@ -86,25 +82,74 @@ public class Chess {
     }
 
     public static void playTurn(){
-        if(whiteTurn){
-            System.out.print("White's Move: ");
-        } else {
-            System.out.print("Black's Move: ");
-        }
-        String move = in.nextLine();
-        if(move.contains("resign")){
-            end = whiteTurn ? "Black Wins" : "White wins";
-        } else if(move.contains("draw?")){
-            end = "draw";
+        boolean legalMove = false;
+        while(!legalMove) {
+            if(whiteTurn){
+                System.out.print("White's Move: ");
+            } else {
+                System.out.print("Black's Move: ");
+            }
+            String move = in.nextLine();
+            if(move.contains("resign")){
+                end = whiteTurn ? "Black Wins" : "White wins";
+                break;
+            } else if(move.contains("draw?")){
+                end = "draw";
+                break;
+            } 
+            // If no draw 
+            else {
+                int[] src = getIndicies(move.substring(0, 2));
+                if(board[src[0]][src[1]] != null && board[src[0]][src[1]].isWhite() == whiteTurn){
+                    int[] dest = getIndicies(move.substring(3, 5));
+                    String promoteTo = null;
+                    if(canBePromoted(src, dest[0])){
+                        promoteTo = move.substring(move.length()-1);
+                    } else if(move.length() > 5) {
+                        legalMove = false;
+                    } else {
+                        legalMove = board[src[0]][src[1]].isLegalMove(src[0], src[1], dest[0], dest[1]);
+                    }
+                    if(legalMove && promoteTo != null){
+                        promote(dest, promoteTo);
+                    }
+                }
+            }
         }
     }
 
-    private int[] getIndicies(String spot){
+    private static int[] getIndicies(String spot){
         char file = spot.charAt(0);
         int rank = spot.charAt(1) - '0';
-        return new int[] {file-'a', 8-rank};
+        return new int[] {8-rank, file - 'a'};
     }
 
+    private static boolean canBePromoted(int[] src, int destRow) {
+        Piece p = board[src[0]][src[1]];
+        if(p instanceof Pawn){
+            if(p.isWhite() && destRow == 0 || !p.isWhite() && destRow == 7)
+        }
+        return false;
+    }
+
+    private static void promote(int[] dest, String promoteTo){ 
+        switch(promoteTo){
+            case "R":
+                board[dest[0]][dest[1]] = new Rook(whiteTurn);
+                break;
+            case "N":
+                board[dest[0]][dest[1]] = new Knight(whiteTurn);
+                break;
+            case "B":
+                board[dest[0]][dest[1]] = new Bishop(whiteTurn);
+                break;
+            default:
+                board[dest[0]][dest[1]] = new Queen(whiteTurn);
+                break;  
+        }
+    }
+
+    
     public static String getEndText(){
         return end;
     }
