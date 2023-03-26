@@ -49,10 +49,6 @@ public class Chess {
         }
     }
 
-    public static void endGame() {
-
-    }
-
     public static void printGame() {
 
         for (int i = 0; i < 8; i++) {
@@ -100,18 +96,16 @@ public class Chess {
                 if (board[src[0]][src[1]] != null && board[src[0]][src[1]].isWhite() == whiteTurn) {
                     int[] dest = getIndices(move.substring(3, 5));
                     String promoteTo = null;
-                    if (canBePromoted(src, dest[0])) {
-                        promoteTo = move.substring(move.length() - 1);
-                    } else if (move.length() > 5) {
-                        legalMove = false;
-                    } else {
-                        legalMove = board[src[0]][src[1]].isLegalMove(src[0], src[1], dest[0], dest[1]);
-                    }
-                    if (legalMove && promoteTo != null) {
-                        promote(dest, promoteTo);
-                    }
+
+                    if (canBePromoted(src, dest[0])) promoteTo = move.substring(move.length() - 1);
+                    else if (move.length() > 5) legalMove = false;
+                    else legalMove = board[src[0]][src[1]].isLegalMove(src[0], dest[0], src[1], dest[1]);
+                    
+                    if (legalMove && promoteTo != null) promote(dest, promoteTo);
                 }
             }
+            if(!legalMove) System.out.println("Illegal move, try again");
+            else whiteTurn = !whiteTurn;
         }
     }
 
@@ -153,9 +147,9 @@ public class Chess {
     }
 
     public static void main(String[] args) {
-        Chess.initGame();
+        initGame();
         while (Chess.getEndText() == null) {
-            Chess.printGame();
+            printGame();
             playTurn();
         }
         System.out.println(Chess.getEndText());
