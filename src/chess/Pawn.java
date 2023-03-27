@@ -11,14 +11,14 @@ public class Pawn extends Piece{
         boolean valid;
         if (y1==y0) return false;
         else if (!this.hasMoved()){
-            if (this.isWhite()) valid = y1-y0<=2;
+            if (isWhite()) valid = y1-y0<=2;
             else valid = y0-y1<=2;
             if (valid){
                 this.setHasMoved(true);
                 firstMoved=true;
             }
         }
-        if (this.isWhite()) valid = y1-y0==1;
+        if (isWhite()) valid = y1-y0==1;
         else valid = y0-y1==1;
         if (valid) firstMoved=false;
         return valid;
