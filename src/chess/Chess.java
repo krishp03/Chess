@@ -330,8 +330,8 @@ public class Chess {
 
     /**
      * 
-     * @param src The location of the current piece about to be moved
-     * @param destRow The rank that the piece is about to move to
+     * @param src The 2 item array with the  indices of the current piece about to be moved
+     * @param destRow The row that the piece is about to move to
      * @return true if the piece is a pawn eligible for promotion, false if not.
      */
     private static boolean canBePromoted(int[] src, int destRow) {

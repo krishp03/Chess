@@ -1,7 +1,7 @@
 package chess;
 
 /**
- * This abstract class represents a chess piece. Subclasses of this class should implement
+ * The {@code Piece} abstract class represents a chess piece. Subclasses of this class should implement
  * the specific behavior and legal moves of each type of piece (e.g. pawn, rook, bishop, etc.).
  *
  * @author Krish Patel
