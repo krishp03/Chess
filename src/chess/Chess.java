@@ -217,7 +217,6 @@ public class Chess {
                                     board[kingPos[0]][kingPos[1]]=tempKing;
                                     board[src[0]][src[1]] = startPiece;
                                     board[dest[0]][dest[1]] = endPiece;
-                                    System.out.println(board[i][j]);
                                     if (startPiece instanceof King){
                                         if (dest[1]-src[1]==2){
                                             board[src[0]][7]=board[src[0]][5];
