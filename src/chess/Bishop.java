@@ -17,7 +17,7 @@ public class Bishop extends Piece{
                 if (y1>y0){
                     j++;
                     while (i<x1 && j<y1){
-                        if (Chess.board[j][i]!=null) {
+                        if (Chess.board[i][j]!=null) {
                             valid=false;
                             break;
                         }
@@ -28,7 +28,7 @@ public class Bishop extends Piece{
                 else{
                     j--;
                     while (i<x1 && j>y1){
-                        if (Chess.board[j][i]!=null) {
+                        if (Chess.board[i][j]!=null) {
                             valid=false;
                             break;
                         }
@@ -42,7 +42,7 @@ public class Bishop extends Piece{
                 if (y1>y0){
                     j++;
                     while (i>x1 && j<y1){
-                        if (Chess.board[j][i]!=null) {
+                        if (Chess.board[i][j]!=null) {
                             valid=false;
                             break;
                         }
@@ -53,7 +53,7 @@ public class Bishop extends Piece{
                 else{
                     j--;
                     while (i>x1 && j>y1){
-                        if (Chess.board[j][i]!=null) {
+                        if (Chess.board[i][j]!=null) {
                             valid=false;
                             break;
                         }
@@ -64,13 +64,13 @@ public class Bishop extends Piece{
             }
         }
         if (valid){
-            if (Chess.board[y1][x1]!=null){
-                if (isWhite()==Chess.board[y1][x1].isWhite()) valid=false;
+            if (Chess.board[x1][y1]!=null){
+                if (isWhite()==Chess.board[x1][y1].isWhite()) valid=false;
             }
         }
         if (valid) {
-            Chess.board[y1][x1]=Chess.board[y0][x0];
-            Chess.board[y0][x0]=null;
+            Chess.board[x1][y1]=Chess.board[x0][y0];
+            Chess.board[x0][y0]=null;
         }
         return valid;
     }
@@ -78,4 +78,5 @@ public class Bishop extends Piece{
     public String toString(){
         return (isWhite()) ? "wB":"bB";
     }
+
 }
