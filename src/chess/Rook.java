@@ -58,7 +58,6 @@ public class Rook extends Piece {
                 if (isWhite() == Chess.board[x1][y1].isWhite()) valid = false;
             }
         }
-        if (valid && !this.hasMoved()) this.setMoved();
         if (valid) {
             Chess.board[x1][y1] = Chess.board[x0][y0];
             Chess.board[x0][y0] = null;
@@ -66,6 +65,7 @@ public class Rook extends Piece {
         return valid;
     }
 
+    @Override
     public String toString() {
         return (isWhite()) ? "wR" : "bR";
     }
