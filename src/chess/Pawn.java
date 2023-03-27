@@ -14,7 +14,7 @@ public class Pawn extends Piece{
             if (isWhite()) valid = y1-y0<=2;
             else valid = y0-y1<=2;
             if (valid){
-                this.setHasMoved(true);
+                this.setMoved();
                 firstMoved=true;
             }
         }
