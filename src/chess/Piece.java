@@ -18,7 +18,7 @@ public abstract class Piece {
      *
      * @param white true if the piece is white, false if the piece is black
      */
-    public Piece(boolean white){
+    public Piece(boolean white) {
         this.white = white;
     }
 
@@ -49,22 +49,24 @@ public abstract class Piece {
 
     /**
      * Sets the enPassantable field to the respective boolean, showing if the pawn can be captured en passant
+     *
+     * @param x the boolean value indicating whether the pawn can be captured en passant
      */
     public void setEnPassant(boolean x) {
-      enPassantable = x;
-  }
-
-  /**
-   * Returns whether the piece can be captured en passant.
-   *
-   * @return true if the piece can be captured en passant, false otherwise
-   */
-  public boolean enPassantable() {
-      return enPassantable;
-  }
+        enPassantable = x;
+    }
 
     /**
-     * Returns a set of squares where the piece can legally move to.
+     * Returns whether the piece can be captured en passant.
+     *
+     * @return true if the piece can be captured en passant, false otherwise
+     */
+    public boolean enPassantable() {
+        return enPassantable;
+    }
+
+    /**
+     * Returns if the inputted move is legal and moves the piece if it is.
      *
      * @param x0 the x-coordinate of the piece's starting position
      * @param x1 the x-coordinate of the piece's destination position

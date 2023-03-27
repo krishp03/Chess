@@ -1,21 +1,48 @@
-/**
- * This project is an implementation of chess game in Java.
- * @author Roshan Varadhan
- * @author Krish Patel
-*/
 package chess;
 
 import java.util.Scanner;
 
+/**
+ * Chess game implementation that allows for en passant capture, castling, and detects checkmates
+ * @author Krish Patel
+ * @author Roshan Varadhan
+ */
 public class Chess {
 
+    /**
+     * The board of the game, represented by a 2D array of Pieces
+     */
     static Piece[][] board;
+    
+    /**
+     * Boolean to keep track of the current turn, true for white, false for black
+     */
     private static boolean whiteTurn;
+    
+    /**
+     * String to keep track of the end result of the game, null if not over
+     */
     private static String end;
+    
+    /**
+     * Scanner to read user input for making moves
+     */
     private static Scanner in;
+    
+    /**
+     * Boolean to keep track of whether white is currently in check
+     */
     private static boolean whiteInCheck;
+    
+    /**
+     * Boolean to keep track of whether black is currently in check
+     */
     private static boolean blackInCheck;
 
+    /**
+     * Initializes a new game of Chess by creating a new board, setting the first turn to white
+     * and creating new instances of all the pieces in their starting positions.
+     */
     public static void initGame() {
         board = new Piece[8][8];
         whiteTurn = true;
@@ -51,6 +78,10 @@ public class Chess {
         }
     }
 
+    /**
+     * Prints the current state of the game board to the console. 
+     * Shows the positions of all the pieces and the letters representing the columns and the numbers representing the rows.
+     */
     public static void printGame() {
 
         for (int i = 0; i < 8; i++) {
@@ -76,6 +107,13 @@ public class Chess {
 
     }
 
+    /**
+     * Plays one turn of chess.
+     * If a player is in check, checks for checkmate.
+     * Promotes a pawn if it reaches the end of the board.
+     * Continues to prompt for a legal move until a valid one is entered.
+     * 
+     */
     public static void playTurn() {
         int[] kingPos = getKingPos(whiteTurn);
         Piece tempKing = board[kingPos[0]][kingPos[1]];
@@ -264,6 +302,12 @@ public class Chess {
         }
     }
 
+    /**
+     * Returns the ending text for the chess game.
+     * This method is called after the game has ended and
+     * the end state has been determined (checkmate, draw, or resignation).
+     * @return A string representing the end state of the game.
+     */
     public static String getEndText() {
         return end;
     }
