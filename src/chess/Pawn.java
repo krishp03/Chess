@@ -32,13 +32,19 @@ public class Pawn extends Piece{
         }
         if (y1!=y0) return false;
         else if (!this.hasMoved()){
-            if (!isWhite()) valid = x1-x0<=2;
-            else valid = x0-x1<=2;
+            if (!isWhite()) {
+                valid = x1-x0<=2;
+                if (Chess.board[x0+1][y1]!=null) valid=false;
+            }
+            else {
+                valid = x0-x1<=2;
+                if (Chess.board[x0-1][y1]!=null) valid=false;
+            }
             if (valid){
                 Chess.board[x1][y1]=Chess.board[x0][y0];
                 Chess.board[x0][y0]=null;
                 this.setMoved();
-                setEnPassant(true);
+                if (Math.abs(x1-x0)==2) setEnPassant(true);
             }
         }
         else {
