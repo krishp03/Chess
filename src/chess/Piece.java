@@ -46,10 +46,6 @@ public abstract class Piece {
         return hasMoved;
     }
 
-    public void setHasMoved(boolean x){
-      this.hasMoved=x;
-    }
-
     /**
      * Returns a set of squares where the piece can legally move to.
      *
