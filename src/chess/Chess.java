@@ -13,6 +13,8 @@ public class Chess {
     private static boolean whiteTurn;
     private static String end;
     private static Scanner in;
+    private static boolean whiteInCheck;
+    private static boolean blackInCheck;
 
     public static void initGame() {
         board = new Piece[8][8];
@@ -75,6 +77,49 @@ public class Chess {
     }
 
     public static void playTurn() {
+        int[] kingPos = getKingPos(whiteTurn);
+        Piece tempKing = board[kingPos[0]][kingPos[1]];
+        boolean currCheck = false;
+        for (int i=0; i<8; i++){
+            for (int j=0; j<8; j++){
+                if (board[i][j]==null) continue;
+                if (board[i][j].isLegalMove(i, kingPos[0], j, kingPos[1])){
+                    board[i][j]=board[kingPos[0]][kingPos[1]];
+                    board[kingPos[0]][kingPos[1]]=tempKing;
+                    System.out.println("Check");
+                    if (tempKing.isWhite()) whiteInCheck=true;
+                    else blackInCheck=true;
+                    currCheck=true;
+                    break;
+                }
+            }
+        }
+        if (!currCheck){
+            if (tempKing.isWhite()) whiteInCheck=false;
+            else blackInCheck=false;
+        }
+        if (whiteTurn && whiteInCheck){
+            boolean mate = noValidMoves();
+            if (mate){
+                System.out.println("Checkmate");
+                end="Black Wins";
+                return;
+            }
+        }
+        if (!whiteTurn && blackInCheck){
+            boolean mate = noValidMoves();
+            if (mate){
+                System.out.println("Checkmate");
+                end="White Wins";
+                return;
+            }
+        }
+
+        if (noValidMoves()){
+            end = "Stalemate";
+            return;
+        }
+        
         boolean legalMove = false;
         while (!legalMove) {
             if (whiteTurn) {
@@ -95,18 +140,95 @@ public class Chess {
                 int[] src = getIndices(move.substring(0, 2));
                 if (board[src[0]][src[1]] != null && board[src[0]][src[1]].isWhite() == whiteTurn) {
                     int[] dest = getIndices(move.substring(3, 5));
+                    Piece endPiece = board[dest[0]][dest[1]];
+                    Piece startPiece = board[src[0]][src[1]];
                     String promoteTo = null;
 
-                    if (canBePromoted(src, dest[0])) promoteTo = move.substring(move.length() - 1);
+                    if (canBePromoted(src, dest[0])){
+                        promoteTo = move.substring(move.length() - 1);
+                        legalMove = board[src[0]][src[1]].isLegalMove(src[0], dest[0], src[1], dest[1]);
+                    }
                     else if (move.length() > 5) legalMove = false;
                     else legalMove = board[src[0]][src[1]].isLegalMove(src[0], dest[0], src[1], dest[1]);
                     
+                    if (legalMove){
+                        kingPos = getKingPos(whiteTurn);
+                        tempKing = board[kingPos[0]][kingPos[1]];
+                        for (int i=0; i<8; i++){
+                            for (int j=0; j<8; j++){
+                                if (board[i][j]==null) continue;
+                                if (board[i][j].isLegalMove(i, kingPos[0], j, kingPos[1])){
+                                    board[i][j]=board[kingPos[0]][kingPos[1]];
+                                    board[kingPos[0]][kingPos[1]]=tempKing;
+                                    board[src[0]][src[1]] = startPiece;
+                                    board[dest[0]][dest[1]] = endPiece;
+                                    legalMove=false;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
                     if (legalMove && promoteTo != null) promote(dest, promoteTo);
                 }
             }
             if(!legalMove) System.out.println("Illegal move, try again");
             else whiteTurn = !whiteTurn;
         }
+    }
+
+    private static boolean noValidMoves() {
+        for (int i=0; i<8; i++){
+            for (int j=0; j<8; j++){
+                if (board[i][j]==null) continue;
+                if (board[i][j].isWhite()!=whiteTurn) continue;
+                Piece aPiece=board[i][j];
+                    for (int x=0; x<8; x++){
+                        for (int y=0; y<8;y++){
+                            Piece bPiece = board[x][y];
+                            boolean canMove = aPiece.isLegalMove(i, x, j, y);
+                            if (canMove){
+                                int[] kingPos = getKingPos(whiteTurn);
+                                Piece tempKing = board[kingPos[0]][kingPos[1]];
+                                for (int w=0; w<8; w++){
+                                    for (int z=0; z<8; z++){
+                                        if (board[w][z]==null) continue;
+                                        if (board[w][z].isLegalMove(w, kingPos[0], z, kingPos[1])){
+                                            board[w][z]=board[kingPos[0]][kingPos[1]];
+                                            board[kingPos[0]][kingPos[1]]=tempKing;
+                                            board[i][j] = aPiece;
+                                            board[x][y] = bPiece;
+                                            canMove=false;
+                                            // break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (canMove){
+                                board[i][j] = aPiece;
+                                board[x][y]=bPiece;
+                                return false;
+                            }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    private static int[] getKingPos(boolean w) {
+        int[] pos = new int[2];
+        for (int i=0; i<8; i++){
+            for (int j=0; j<8; j++){
+                if (board[i][j] instanceof King){
+                    if (board[i][j].isWhite()==w){
+                        pos[0]=i;
+                        pos[1]=j;
+                    }
+                }
+            }
+        }
+        return pos;
     }
 
     private static int[] getIndices(String spot) {
