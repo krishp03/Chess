@@ -41,13 +41,13 @@ public class King extends Piece{
                 Chess.board[y0][0]=null;
 
             }
-            this.setHasMoved(true);
+            this.setMoved();
             return true;
         }
         if (x1==x0 && y1==y0) return false;
         if (Math.abs(x1-x0)<=1 && Math.abs(y1-y0)<=1) valid=true;
         if (valid){
-            if (!this.hasMoved()) this.setHasMoved(true);
+            if (!this.hasMoved()) this.setMoved();
             Chess.board[y1][x1]=Chess.board[y0][x0];
             Chess.board[y0][x0]=null;
         }
