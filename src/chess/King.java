@@ -10,6 +10,9 @@ package chess;
  */
 public class King extends Piece {
 
+    /**
+     * A boolean to determine if the king is currently able to castle
+     */
     private boolean canCastle = true;
 
     /**
@@ -49,25 +52,22 @@ public class King extends Piece {
             if (y1 == y0 + 2) {
                 Chess.board[x0][5] = Chess.board[x0][7];
                 Chess.board[x0][7] = null;
-                System.out.println("Castled Short");
             } else {
                 Chess.board[x0][3] = Chess.board[x0][0];
                 Chess.board[x0][0] = null;
-                System.out.println("Castled Long");
             }
-            this.setMoved();
             return true;
         }
         if (x1 == x0 && y1 == y0) return false;
         if (Math.abs(x1 - x0) <= 1 && Math.abs(y1 - y0) <= 1) valid = true;
         if (valid) {
-            if (!this.hasMoved()) this.setMoved();
             Chess.board[x1][y1] = Chess.board[x0][y0];
             Chess.board[x0][y0] = null;
         }
         return valid;
     }
 
+    @Override
     public String toString() {
         return (isWhite()) ? "wK" : "bK";
     }
