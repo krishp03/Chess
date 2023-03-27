@@ -10,7 +10,8 @@ package chess;
 public abstract class Piece {
 
     private boolean white;
-    private boolean hasMoved = true;
+    private boolean hasMoved = false;
+    private boolean enPassantable = false;
 
     /**
      * Constructor for a Piece object. Sets the color of the piece.
@@ -45,6 +46,22 @@ public abstract class Piece {
     public boolean hasMoved() {
         return hasMoved;
     }
+
+    /**
+     * Sets the enPassantable field to the respective boolean, showing if the pawn can be captured en passant
+     */
+    public void setEnPassant(boolean x) {
+      enPassantable = x;
+  }
+
+  /**
+   * Returns whether the piece can be captured en passant.
+   *
+   * @return true if the piece can be captured en passant, false otherwise
+   */
+  public boolean enPassantable() {
+      return enPassantable;
+  }
 
     /**
      * Returns a set of squares where the piece can legally move to.
