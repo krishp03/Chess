@@ -114,6 +114,7 @@ public class Queen extends Piece {
         return validNonDiag || validDiag;
     }
 
+    @Override
     public String toString() {
         return (isWhite()) ? "wQ" : "bQ";
     }
