@@ -38,6 +38,7 @@ public class Pawn extends Piece {
             if (!(Chess.board[x0][y1] instanceof Pawn)) return false;
             if (Chess.board[x0][y1].isWhite() == isWhite()) return false;
             if (!Chess.board[x0][y1].enPassantable()) return false;
+            if (Chess.board[x0][y1] != Chess.lastMoved) return false;
             Chess.board[x1][y1] = Chess.board[x0][y0];
             Chess.board[x0][y0] = null;
             Chess.board[x0][y1] = null;
@@ -56,7 +57,6 @@ public class Pawn extends Piece {
             if (valid) {
                 Chess.board[x1][y1] = Chess.board[x0][y0];
                 Chess.board[x0][y0] = null;
-                this.setMoved();
                 if (Math.abs(x1 - x0) == 2) setEnPassant(true);
             }
         } else {
@@ -73,6 +73,7 @@ public class Pawn extends Piece {
 
     }
 
+    @Override
     public String toString() {
         return (isWhite()) ? "wp" : "bp";
     }
