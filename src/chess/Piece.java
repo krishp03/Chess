@@ -66,7 +66,8 @@ public abstract class Piece {
     }
 
     /**
-     * Returns if the inputted move is legal and moves the piece if it is.
+     * Returns true if the inputted move is legal and false if not
+     * If the move is legal, it moves the piece.
      *
      * @param x0 the x-coordinate of the piece's starting position
      * @param x1 the x-coordinate of the piece's destination position
