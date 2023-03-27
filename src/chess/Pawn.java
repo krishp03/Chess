@@ -26,7 +26,7 @@ public class Pawn extends Piece {
             if (isWhite() == Chess.board[x1][y1].isWhite()) return false;
             if (Math.abs(y1 - y0) != 1) return false;
             if (!isWhite() && x1 - x0 != 1) return false;
-            if (x0 - x1 != 1) return false;
+            if (isWhite() && x0 - x1 != 1) return false;
             Chess.board[x1][y1] = Chess.board[x0][y0];
             Chess.board[x0][y0] = null;
             setEnPassant(false);
@@ -34,7 +34,7 @@ public class Pawn extends Piece {
         }
         if (Math.abs(y1 - y0) == 1) {
             if (!isWhite() && x1 - x0 != 1) return false;
-            if (x0 - x1 != 1) return false;
+            if (isWhite() && x0 - x1 != 1) return false;
             if (!(Chess.board[x0][y1] instanceof Pawn)) return false;
             if (Chess.board[x0][y1].isWhite() == isWhite()) return false;
             if (!Chess.board[x0][y1].enPassantable()) return false;
