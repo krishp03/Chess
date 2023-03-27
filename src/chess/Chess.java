@@ -40,6 +40,11 @@ public class Chess {
     private static boolean blackInCheck;
 
     /**
+     * Piece to track the last moved piece, used for En Passant
+     */
+    static Piece lastMoved;
+
+    /**
      * Initializes a new game of Chess by creating a new board, setting the first turn to white
      * and creating new instances of all the pieces in their starting positions.
      */
@@ -136,6 +141,7 @@ public class Chess {
             if (tempKing.isWhite()) whiteInCheck=false;
             else blackInCheck=false;
         }
+
         if (whiteTurn && whiteInCheck){
             boolean mate = noValidMoves();
             if (mate){
@@ -152,12 +158,11 @@ public class Chess {
                 return;
             }
         }
-
         if (noValidMoves()){
             end = "Stalemate";
             return;
         }
-        
+
         boolean legalMove = false;
         while (!legalMove) {
             if (whiteTurn) {
@@ -176,19 +181,31 @@ public class Chess {
             // If no draw
             else {
                 int[] src = getIndices(move.substring(0, 2));
+                int[] dest = getIndices(move.substring(3, 5));
                 if (board[src[0]][src[1]] != null && board[src[0]][src[1]].isWhite() == whiteTurn) {
-                    int[] dest = getIndices(move.substring(3, 5));
                     Piece endPiece = board[dest[0]][dest[1]];
                     Piece startPiece = board[src[0]][src[1]];
                     String promoteTo = null;
+                    Piece enPassantPotential;
+                    if (startPiece instanceof Pawn && endPiece==null && Math.abs(dest[1]-src[1])==1){
+                        enPassantPotential = board[src[0]][dest[1]];
+                    }else enPassantPotential=null;
 
+                    // pawn promotion
                     if (canBePromoted(src, dest[0])){
                         promoteTo = move.substring(move.length() - 1);
                         legalMove = board[src[0]][src[1]].isLegalMove(src[0], dest[0], src[1], dest[1]);
                     }
                     else if (move.length() > 5) legalMove = false;
+                    else if (whiteInCheck || blackInCheck){
+                        if (startPiece instanceof King){
+                            if (Math.abs(dest[1]-src[1])==2) legalMove=false;
+                            else legalMove = board[src[0]][src[1]].isLegalMove(src[0], dest[0], src[1], dest[1]);
+                        }
+                    }
                     else legalMove = board[src[0]][src[1]].isLegalMove(src[0], dest[0], src[1], dest[1]);
                     
+                    // if move results in self check
                     if (legalMove){
                         kingPos = getKingPos(whiteTurn);
                         tempKing = board[kingPos[0]][kingPos[1]];
@@ -200,21 +217,39 @@ public class Chess {
                                     board[kingPos[0]][kingPos[1]]=tempKing;
                                     board[src[0]][src[1]] = startPiece;
                                     board[dest[0]][dest[1]] = endPiece;
+                                    if (startPiece instanceof King){
+                                        if (dest[1]-src[1]==2){
+                                            board[src[0]][7]=board[src[0]][5];
+                                            board[src[0]][5]=null;
+                                        } else if (src[1]-dest[1]==2){
+                                            board[src[0]][0]=board[src[0]][3];
+                                            board[src[0]][3]=null;
+                                        }
+                                    }
+                                    if (enPassantPotential!=null) board[src[0]][dest[1]]=enPassantPotential;
                                     legalMove=false;
                                     break;
                                 }
                             }
                         }
                     }
-
                     if (legalMove && promoteTo != null) promote(dest, promoteTo);
                 }
+                if(!legalMove) System.out.println("Illegal move, try again");
+                else {
+                    lastMoved = board[dest[0]][dest[1]];
+                    lastMoved.setMoved();
+                    whiteTurn = !whiteTurn;
+                }
             }
-            if(!legalMove) System.out.println("Illegal move, try again");
-            else whiteTurn = !whiteTurn;
         }
     }
 
+    /**
+     * Returns a boolean to check if the player has any legal moves
+     * Utilized to check for checkmate if in check or stalemate if not in check
+     * @return a boolean representing if the player can legally make a move
+     */
     private static boolean noValidMoves() {
         for (int i=0; i<8; i++){
             for (int j=0; j<8; j++){
@@ -224,6 +259,10 @@ public class Chess {
                     for (int x=0; x<8; x++){
                         for (int y=0; y<8;y++){
                             Piece bPiece = board[x][y];
+                            Piece enPassantPotential2;
+                            if (aPiece instanceof Pawn && bPiece==null && Math.abs(y-j)==1){
+                                enPassantPotential2 = board[i][y];
+                            }else enPassantPotential2=null;
                             boolean canMove = aPiece.isLegalMove(i, x, j, y);
                             if (canMove){
                                 int[] kingPos = getKingPos(whiteTurn);
@@ -236,8 +275,9 @@ public class Chess {
                                             board[kingPos[0]][kingPos[1]]=tempKing;
                                             board[i][j] = aPiece;
                                             board[x][y] = bPiece;
+                                            if (enPassantPotential2!=null) board[i][y]=enPassantPotential2;
                                             canMove=false;
-                                            // break;
+                                            break;
                                         }
                                     }
                                 }
@@ -245,6 +285,7 @@ public class Chess {
                             if (canMove){
                                 board[i][j] = aPiece;
                                 board[x][y]=bPiece;
+                                if (enPassantPotential2!=null) board[i][y]=enPassantPotential2;
                                 return false;
                             }
                     }
@@ -254,6 +295,12 @@ public class Chess {
         return true;
     }
 
+    /**
+     * Returns the current position of the player's king
+     * Utilized to check if the king is currently in check, or will move into check
+     * @param w a boolean to determine the color of the king. True if white, false if black
+     * @return An integer array of size two that returns the coordinates of the king in the two dimensional chess board.
+     */
     private static int[] getKingPos(boolean w) {
         int[] pos = new int[2];
         for (int i=0; i<8; i++){
@@ -269,12 +316,24 @@ public class Chess {
         return pos;
     }
 
+    /**
+     * Converts user input into integers for coordinates
+     * Transforms whatever the user puts in into rank and file
+     * @param spot A string representing the input piece location from the user
+     * @return An integer array with the converted coordinates
+     */
     private static int[] getIndices(String spot) {
         char file = spot.charAt(0);
         int rank = spot.charAt(1) - '0';
         return new int[] { 8 - rank, file - 'a' };
     }
 
+    /**
+     * 
+     * @param src The location of the current piece about to be moved
+     * @param destRow The rank that the piece is about to move to
+     * @return true if the piece is a pawn eligible for promotion, false if not.
+     */
     private static boolean canBePromoted(int[] src, int destRow) {
         Piece p = board[src[0]][src[1]];
         if(p instanceof Pawn){
@@ -285,6 +344,11 @@ public class Chess {
         return false;
     }
 
+    /**
+     * Promotes a pawn into a higher piece if possible.
+     * @param dest A 2 item array containing the location of the piece to be promoted
+     * @param promoteTo A string representing the piece to be promoted to.
+     */
     private static void promote(int[] dest, String promoteTo) {
         switch (promoteTo) {
             case "R":
