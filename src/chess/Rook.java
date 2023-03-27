@@ -12,7 +12,7 @@ public class Rook extends Piece{
         if (valid){
             if (y1<y0){
                 for (int i=y0-1; i>y1; i--){
-                    if (Chess.board[i][x1]!=null){
+                    if (Chess.board[x1][i]!=null){
                         valid=false;
                         break;
                     }
@@ -20,7 +20,7 @@ public class Rook extends Piece{
             }
             else if(y1>y0){
                 for (int i=y0+1; i<y1; i++){
-                    if (Chess.board[i][x1]!=null){
+                    if (Chess.board[x1][i]!=null){
                         valid=false;
                         break;
                     }
@@ -28,7 +28,7 @@ public class Rook extends Piece{
             }
             else if (x1<x0){
                 for (int i=x0-1; i>x1; i--){
-                    if (Chess.board[y1][i]!=null){
+                    if (Chess.board[i][y1]!=null){
                         valid=false;
                         break;
                     }
@@ -36,7 +36,7 @@ public class Rook extends Piece{
             }
             else{
                 for (int i=x0+1; i<x1; i++){
-                    if (Chess.board[y1][i]!=null){
+                    if (Chess.board[i][y1]!=null){
                         valid=false;
                         break;
                     }
@@ -44,14 +44,14 @@ public class Rook extends Piece{
             }
         }
         if (valid){
-            if (Chess.board[y1][x1]!=null){
-                if (isWhite() == Chess.board[y1][x1].isWhite()) valid = false;
+            if (Chess.board[x1][y1]!=null){
+                if (isWhite() == Chess.board[x1][y1].isWhite()) valid = false;
             }
         }
         if (valid && !this.hasMoved()) this.setMoved();
         if (valid) {
-            Chess.board[y1][x1]=Chess.board[y0][x0];
-            Chess.board[y0][x0]=null;
+            Chess.board[x1][y1]=Chess.board[x0][y0];
+            Chess.board[x0][y0]=null;
         }
         return valid;
     }
