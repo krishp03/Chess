@@ -33,6 +33,7 @@ public class Knight extends Piece {
         return valid;
     }
 
+    @Override
     public String toString() {
         return (isWhite()) ? "wN" : "bN";
     }
