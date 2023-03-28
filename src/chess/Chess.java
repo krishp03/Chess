@@ -88,7 +88,6 @@ public class Chess {
      * Shows the positions of all the pieces and the letters representing the columns and the numbers representing the rows.
      */
     public static void printGame() {
-
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
 
@@ -171,6 +170,7 @@ public class Chess {
                 System.out.print("Black's Move: ");
             }
             String move = in.nextLine();
+            System.out.println();
             if (move.contains("resign")) {
                 end = whiteTurn ? "Black Wins" : "White wins";
                 break;
@@ -235,7 +235,7 @@ public class Chess {
                     }
                     if (legalMove && promoteTo != null) promote(dest, promoteTo);
                 }
-                if(!legalMove) System.out.println("Illegal move, try again");
+                if(!legalMove) System.out.println("Illegal move, try again\n");
                 else {
                     lastMoved = board[dest[0]][dest[1]];
                     lastMoved.setMoved();
