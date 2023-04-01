@@ -4,7 +4,7 @@ This code is a Java implementation of a Chess game simulator that uses an ASCII 
 
 ## Requirements
 
-The code requires Java 8 or higher to run. There are no additional dependencies or external libraries needed.
+There are no additional dependencies or external libraries needed.
 
 ## How to Play
 
