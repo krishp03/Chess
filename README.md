@@ -22,7 +22,7 @@ There are no additional dependencies or external libraries needed.
 
 ## ASCII Board Representation
 
-The board is represented using ASCII characters, with each square represented by two characters. The first character represents the color of the piece on the square ('w' for white, 'b' for black), and the second character represents the type of piece on the square ('K' for king, 'Q' for queen, 'R' for rook, 'B' for bishop, 'N' for knight, 'P' for pawn).
+The board is represented using ASCII characters, with each square represented by two characters. The first character represents the color of the piece on the square ('w' for white, 'b' for black), and the second character represents the type of piece on the square ('K' for king, 'Q' for queen, 'R' for rook, 'B' for bishop, 'N' for knight, 'p' for pawn).
 
 ## Authors
 
